@@ -63,10 +63,8 @@ public static class CatalogBrandApi
         return TypedResults.Created($"/api/v1/brands/{brand.Id}");
     }
 
-    public static async Task<Results<NoContent, NotFound, BadRequest<string>>> DeleteBrandById(
-    [AsParameters] CatalogServices services,
-    int id,
-    CancellationToken cancellationToken)
+    public static async Task<Results<NoContent, NotFound, BadRequest<string>>> DeleteBrandById
+        ([AsParameters] CatalogServices services, int id, CancellationToken cancellationToken)
     {
         if (id <= 0)
         {
