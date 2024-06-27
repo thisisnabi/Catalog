@@ -1,3 +1,5 @@
+using Catalog.Apis;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationServices();
@@ -15,5 +17,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapGroup("/api/v1/brands")
+   .WithTags("Catalog Brand APIs")
+   .MapCatalogBrandApis();
+
+app.MapGroup("/api/v1/categories")
+   .WithTags("Catalog Category APIs")
+   .MapCatalogCategoryApis();
+
 
 app.Run();
