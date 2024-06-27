@@ -20,6 +20,9 @@ public sealed class CatalogItemEntityTypeConfiguration : IEntityTypeConfiguratio
                .IsRequired()
                .HasMaxLength(150);
 
+        builder.Property(x => x.Price)
+               .HasColumnType("decimal(15,2)");
+
         builder.HasIndex(x => x.Slug);
     }
 }

@@ -2,6 +2,7 @@
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using System.Text.RegularExpressions;
+global using System.Reflection;
 
 // third-party
 

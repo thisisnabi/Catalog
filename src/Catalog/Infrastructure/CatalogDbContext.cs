@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Catalog.Infrastructure;
+﻿namespace Catalog.Infrastructure;
 
 public class CatalogDbContext(DbContextOptions<CatalogDbContext> dbContextOptions) : DbContext(dbContextOptions)
 {
@@ -8,6 +6,8 @@ public class CatalogDbContext(DbContextOptions<CatalogDbContext> dbContextOption
     public const string DefaultConnectionStringName = "SvcDbContext";
 
     public DbSet<CatalogBrand> CatalogBrands => Set<CatalogBrand>();
+    public DbSet<CatalogItem> CatalogItems => Set<CatalogItem>();
+    public DbSet<CatalogCategory> CatalogCategories => Set<CatalogCategory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
