@@ -26,5 +26,8 @@ app.MapGroup("/api/v1/categories")
    .WithTags("Category APIs")
    .MapCatalogCategoryApis();
 
-
+app.MapGroup("/api/v1/items")
+   .WithTags("Item APIs")
+   .MapCatalogItemApis();
+ 
 app.Run();

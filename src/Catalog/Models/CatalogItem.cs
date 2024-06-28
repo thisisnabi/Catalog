@@ -18,16 +18,38 @@ public class CatalogItem
 
     public int MaxStockThreshold { get; private set; }
 
-    public CatalogItem Create(string name, string description, int maxStockThreshold, int brandId, decimal price = default)
-        => new CatalogItem
+    public static CatalogItem Create(string name, string description, int maxStockThreshold, int brandId, int categoryId, decimal price = default)
+    {
+        var newItem = new CatalogItem
         {
             Name = name,
             CatalogBrandId = brandId,
+            CatalogCategoryId = categoryId,
             Description = description,
-            MaxStockThreshold = maxStockThreshold,
             Slug = name.ToKebabCase(),
             Price = price
         };
+
+        newItem.SetMaxStockThreshold(maxStockThreshold);
+
+        return newItem;
+    }
+
+    public void Update(string name, string description, int brandId, int categoryId)
+    {
+        Name = name;
+        CatalogBrandId = brandId;
+        CatalogCategoryId = categoryId;
+        Description = description;
+        Slug = name.ToKebabCase();
+    }
+    public void SetMaxStockThreshold(int maxStockThreshold)
+    {
+        if (maxStockThreshold <= 0)
+            throw new PriceGreaterThanZeroException();
+
+        MaxStockThreshold = maxStockThreshold;
+    }
 
     public CatalogBrand CatalogBrand { get; private set; } = null!;
 

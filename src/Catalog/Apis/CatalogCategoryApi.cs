@@ -115,11 +115,11 @@ public static class CatalogCategoryApi
     [AsParameters] CatalogServices services,
     CancellationToken cancellationToken)
     {
-        var brands = await services.Context.CatalogCategories
-                                           .OrderBy(c => c.Id)
-                                           .Select(x => new CatalogCategoryResponse(x.Id, x.Category, x.Path))
-                                           .ToListAsync(cancellationToken);
+        var categories = await services.Context.CatalogCategories
+                                       .OrderBy(c => c.Id)
+                                       .Select(x => new CatalogCategoryResponse(x.Id, x.Category, x.Path))
+                                       .ToListAsync(cancellationToken);
 
-        return TypedResults.Ok<IEnumerable<CatalogCategoryResponse>>(brands);
+        return TypedResults.Ok<IEnumerable<CatalogCategoryResponse>>(categories);
     }
 }
