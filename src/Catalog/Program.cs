@@ -19,11 +19,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapGroup("/api/v1/brands")
-   .WithTags("Catalog Brand APIs")
+   .WithTags("Brand APIs")
    .MapCatalogBrandApis();
 
 app.MapGroup("/api/v1/categories")
-   .WithTags("Catalog Category APIs")
+   .WithTags("Category APIs")
    .MapCatalogCategoryApis();
 
 

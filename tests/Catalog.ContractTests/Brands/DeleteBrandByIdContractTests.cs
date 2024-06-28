@@ -34,8 +34,7 @@ public class DeleteBrandByIdContractTests
     public async Task DeleteBrandById_InvalidId_ReturnsBadRequest()
     {
         // Arrange
- 
-        var mockServices = SetupServices("DeleteBrandById_InvalidId_ReturnsBadRequest");
+        var mockServices = SetupServices(databaseName: "DeleteBrandById_InvalidId_ReturnsBadRequest");
 
         // Act
         var results = await CatalogBrandApi.DeleteBrandById(mockServices, -1, CancellationToken.None);
