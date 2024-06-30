@@ -6,7 +6,7 @@ public static class CatalogItemApi
     {
         app.MapPost("/", CreateItem);
         app.MapPut("/", UpdateItem);
-        app.MapPatch("/MaxStockThreshold", UpdateMaxStockThreshold);
+        app.MapPatch("/max_stock_threshold", UpdateMaxStockThreshold);
         app.MapDelete("/{id:int:required}", DeleteItemById);
         app.MapGet("/{id:int:required}", GetItemById);
         app.MapGet("/", GetItems);

@@ -18,6 +18,8 @@ public class CatalogItem
 
     public int MaxStockThreshold { get; private set; }
 
+    public ICollection<CatalogMedia> Medias { get; private set; } = [];
+
     public static CatalogItem Create(string name, string description, int maxStockThreshold, int brandId, int categoryId, decimal price = default)
     {
         var newItem = new CatalogItem

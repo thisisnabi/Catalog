@@ -24,5 +24,18 @@ public sealed class CatalogItemEntityTypeConfiguration : IEntityTypeConfiguratio
                .HasColumnType("decimal(15,2)");
 
         builder.HasIndex(x => x.Slug);
+
+        builder.OwnsMany(x => x.Medias, builder =>
+        {
+            builder.ToJson();
+
+            builder.Property(x => x.Name)
+                   .IsRequired()
+                   .HasMaxLength(100);
+
+            builder.Property(x => x.Url)
+                   .IsRequired()
+                   .HasMaxLength(1098);
+        });
     }
 }
