@@ -10,6 +10,8 @@ public static class CatalogItemApi
         app.MapDelete("/{id:int:required}", DeleteItemById);
         app.MapGet("/{id:int:required}", GetItemById);
         app.MapGet("/", GetItems);
+        app.MapPost("/{id:int:required}/media", UploadMedia);
+
 
         return app;
     }
@@ -167,7 +169,7 @@ public static class CatalogItemApi
 
         return TypedResults.Ok(
             new CatalogItemResponse(
-                item.Id, 
+                item.Id,
                 item.Name,
                 item.Slug,
                 item.Description,
@@ -202,5 +204,52 @@ public static class CatalogItemApi
                                           .ToListAsync(cancellationToken);
 
         return TypedResults.Ok<IEnumerable<CatalogItemResponse>>(items);
+    }
+
+
+    public static async Task<Results<Ok, BadRequest<string>, NotFound>> UploadMedia(
+        int id,
+        [AsParameters] CatalogServices services,
+        MediaService mediaService,
+        HttpRequest request)
+    {
+        if (!request.HasFormContentType)
+        {
+            return TypedResults.BadRequest("Expected a form submission.");
+        }
+
+        if (id <= 0)
+        {
+            return TypedResults.BadRequest("Id is not valid.");
+        }
+
+        var item = await services.Context.CatalogItems
+                                 .Include(x => x.CatalogBrand)
+                                 .Include(x => x.CatalogCategory)
+                                 .FirstOrDefaultAsync(ci => ci.Id == id);
+        if (item is null)
+        {
+            return TypedResults.NotFound();
+        }
+
+
+        var form = await request.ReadFormAsync();
+        var file = form.Files["file"];
+
+        if (file == null || file.Length == 0)
+        {
+            return TypedResults.BadRequest("File is not selected or is empty.");
+        }
+         
+        using (var ms = new MemoryStream())
+        {
+            await file.CopyToAsync(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var url = await mediaService.UploadStream(ms);
+            item.AddMedia(file.FileName, url);
+        }
+
+        return TypedResults.Ok();
     }
 }

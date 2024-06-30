@@ -1,4 +1,5 @@
-﻿namespace Catalog.Models;
+﻿
+namespace Catalog.Models;
 
 public class CatalogItem
 {
@@ -103,4 +104,8 @@ public class CatalogItem
         Price = price;
     }
 
+    public void AddMedia(string fileName, string url)
+    {
+        Medias.Add(new CatalogMedia(fileName, url));
+    }
 }
