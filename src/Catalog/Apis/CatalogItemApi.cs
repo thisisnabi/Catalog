@@ -206,7 +206,7 @@ public static class CatalogItemApi
         return TypedResults.Ok<IEnumerable<CatalogItemResponse>>(items);
     }
 
-
+    // This will be removed in the future. Media as a service
     public static async Task<Results<Ok, BadRequest<string>, NotFound>> UploadMedia(
         int id,
         [AsParameters] CatalogServices services,
