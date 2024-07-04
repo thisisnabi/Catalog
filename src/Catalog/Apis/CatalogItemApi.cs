@@ -1,4 +1,7 @@
-﻿namespace Catalog.Apis;
+﻿using Catalog.Infrastructure.IntegrationEvents;
+using MassTransit.Transports;
+
+namespace Catalog.Apis;
 
 public static class CatalogItemApi
 {
@@ -20,6 +23,7 @@ public static class CatalogItemApi
         [AsParameters] CatalogServices services,
         CreateCatalogItemRequest itemToCreate,
         IValidator<CreateCatalogItemRequest> validator,
+        IPublishEndpoint publishEndpoint,
         CancellationToken cancellationToken)
     {
         var validate = validator.Validate(itemToCreate);
@@ -55,7 +59,23 @@ public static class CatalogItemApi
         services.Context.CatalogItems.Add(item);
         await services.Context.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Created($"/api/v1/items/{item.Id}");
+        var hintUrl = $"/api/v1/items/{item.Id}";
+
+        var loadedItem = await services.Context.CatalogItems
+                                                    .Include(ci => ci.CatalogBrand)
+                                                    .Include(ci => ci.CatalogCategory)
+                                                    .FirstAsync(x => x.Id == item.Id);
+         
+        await services.Publish.Publish(
+            new CatalogItemAddedEvent(
+                loadedItem.Name, 
+                loadedItem.Description, 
+                loadedItem.CatalogCategory.Category, 
+                loadedItem.CatalogBrand.Brand,
+                loadedItem.Slug,
+                hintUrl));
+         
+        return TypedResults.Created(hintUrl);
     }
 
     public static async Task<Results<Created, ValidationProblem, NotFound<string>, BadRequest<string>>> UpdateItem(
@@ -70,7 +90,8 @@ public static class CatalogItemApi
             return TypedResults.ValidationProblem(validate.ToDictionary());
         }
 
-        var Item = await services.Context.CatalogItems.FirstOrDefaultAsync(i => i.Id == itemToUpdate.Id, cancellationToken);
+        var Item = await services.Context.CatalogItems
+                                                .FirstOrDefaultAsync(i => i.Id == itemToUpdate.Id, cancellationToken);
         if (Item is null)
         {
             return TypedResults.NotFound($"Item with id {itemToUpdate.Id} not found.");
@@ -101,6 +122,19 @@ public static class CatalogItemApi
                     itemToUpdate.CatalogId);
 
         await services.Context.SaveChangesAsync(cancellationToken);
+
+        var loadedItem = await services.Context.CatalogItems
+                                            .Include(ci => ci.CatalogBrand)
+                                            .Include(ci => ci.CatalogCategory)
+                                            .FirstAsync(x => x.Id == Item.Id);
+
+        await services.Publish.Publish(
+            new CatalogItemChangedEvent(
+                loadedItem.Name,
+                loadedItem.Description,
+                loadedItem.CatalogCategory.Category,
+                loadedItem.CatalogBrand.Brand,
+                loadedItem.Slug));
 
         return TypedResults.Created($"/api/v1/items/{Item.Id}");
     }

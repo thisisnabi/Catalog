@@ -21,12 +21,8 @@ public static class ApplicationExtensions
                 throw new ArgumentNullException(nameof(BrokerOptions));
             }
 
-            configure.AddConsumers(Assembly.GetExecutingAssembly());
-
             configure.UsingRabbitMq((context, cfg) =>
             {
-                cfg.UseRawJsonDeserializer();
-
                 cfg.Host(brokerConfig.Host, hostConfigure =>
                 {
                     hostConfigure.Username(brokerConfig.Username);
