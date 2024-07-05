@@ -82,10 +82,17 @@ public static class CatalogCategoryEndpoints
             return TypedResults.BadRequest("Id is not valid.");
         }
 
-        var category = await services.Context.CatalogCategories.FirstOrDefaultAsync(x => x.Id == id);
+        var category = await services.Context.CatalogCategories
+                                             .Include(ci => ci.Children)
+                                             .FirstOrDefaultAsync(x => x.Id == id);
         if (category is null)
         {
             return TypedResults.NotFound();
+        }
+
+        if (category.Children.Any())
+        { 
+            return TypedResults.BadRequest("The category has child categories and cannot be deleted.");
         }
 
         services.Context.CatalogCategories.Remove(category);
@@ -102,13 +109,15 @@ public static class CatalogCategoryEndpoints
             return TypedResults.BadRequest("Id is not valid.");
         }
 
-        var category = await services.Context.CatalogCategories.FirstOrDefaultAsync(ci => ci.Id == id);
+        var category = await services.Context.CatalogCategories 
+                                             .Include(ci => ci.Parent)             
+                                             .FirstOrDefaultAsync(ci => ci.Id == id);
         if (category is null)
         {
             return TypedResults.NotFound();
         }
 
-        return TypedResults.Ok(new CatalogCategoryResponse(id, category.Category,category.Path));
+        return TypedResults.Ok(new CatalogCategoryResponse(id, category.Category, category.Path));
     }
 
     public static async Task<Results<Ok<IEnumerable<CatalogCategoryResponse>>, BadRequest<string>>> GetCategories(
