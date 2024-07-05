@@ -57,7 +57,7 @@ public static class CatalogItemEndpoints
         services.Context.CatalogItems.Add(item);
         await services.Context.SaveChangesAsync(cancellationToken);
 
-        var hintUrl = $"/api/v1/items/{item.Id}";
+        var hintUrl = $"/catalog/api/v1/items/{item.Id}";
 
         var loadedItem = await services.Context.CatalogItems
                                                     .Include(ci => ci.CatalogBrand)
@@ -134,7 +134,7 @@ public static class CatalogItemEndpoints
                 loadedItem.CatalogBrand.Brand,
                 loadedItem.Slug));
 
-        return TypedResults.Created($"/api/v1/items/{Item.Id}");
+        return TypedResults.Created($"/catalog/api/v1/items/{Item.Id}");
     }
 
     public static async Task<Results<Created, ValidationProblem, NotFound<string>, BadRequest<string>>> UpdateMaxStockThreshold(
@@ -159,7 +159,7 @@ public static class CatalogItemEndpoints
 
         await services.Context.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Created($"/api/v1/items/{Item.Id}");
+        return TypedResults.Created($"/catalog/api/v1/items/{Item.Id}");
     }
 
     public static async Task<Results<NoContent, NotFound, BadRequest<string>>> DeleteItemById
