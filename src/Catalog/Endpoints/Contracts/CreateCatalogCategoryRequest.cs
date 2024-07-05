@@ -1,4 +1,4 @@
-﻿namespace Catalog.Apis.Contracts;
+﻿namespace Catalog.Endpoints.Contracts;
 
 public sealed record CreateCatalogCategoryRequest(string Category, int? ParentId);
 

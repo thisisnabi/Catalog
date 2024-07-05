@@ -1,4 +1,4 @@
-﻿using Catalog.Apis;
+﻿using Catalog.Endpoints;
 using Catalog.Infrastructure;
 using Catalog.Models;
 using Catalog.Services;
@@ -37,7 +37,7 @@ public class DeleteBrandByIdContractTests
         var mockServices = SetupServices(databaseName: "DeleteBrandById_InvalidId_ReturnsBadRequest");
 
         // Act
-        var results = await CatalogBrandApi.DeleteBrandById(mockServices, -1, CancellationToken.None);
+        var results = await CatalogBrandEndpoints.DeleteBrandById(mockServices, -1, CancellationToken.None);
 
         // Assert
         results.Result.Should().BeOfType<BadRequest<string>>()
@@ -51,7 +51,7 @@ public class DeleteBrandByIdContractTests
         var mockServices = SetupServices(databaseName: "DeleteBrandById_BrandNotFound_ReturnsNotFound");
 
         // Act
-        var results = await CatalogBrandApi.DeleteBrandById(mockServices, 999, CancellationToken.None);
+        var results = await CatalogBrandEndpoints.DeleteBrandById(mockServices, 999, CancellationToken.None);
 
         // Assert
         results.Result.Should().BeOfType<NotFound>();
@@ -71,7 +71,7 @@ public class DeleteBrandByIdContractTests
         await context.SaveChangesAsync();
 
         // Act
-        var results = await CatalogBrandApi.DeleteBrandById(mockServices, brand.Id, CancellationToken.None);
+        var results = await CatalogBrandEndpoints.DeleteBrandById(mockServices, brand.Id, CancellationToken.None);
 
         // Assert
         results.Result.Should().BeOfType<NoContent>();

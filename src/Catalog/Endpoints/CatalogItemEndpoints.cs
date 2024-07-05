@@ -1,11 +1,10 @@
 ﻿using Catalog.Infrastructure.IntegrationEvents;
-using MassTransit.Transports;
 
-namespace Catalog.Apis;
+namespace Catalog.Endpoints;
 
-public static class CatalogItemApi
+public static class CatalogItemEndpoints
 {
-    public static IEndpointRouteBuilder MapCatalogItemApis(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapCatalogItemEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/", CreateItem);
         app.MapPut("/", UpdateItem);
@@ -14,8 +13,7 @@ public static class CatalogItemApi
         app.MapGet("/{id:int:required}", GetItemById);
         app.MapGet("/", GetItems);
         app.MapPost("/{id:int:required}/media", UploadMedia);
-
-
+         
         return app;
     }
 
@@ -65,16 +63,16 @@ public static class CatalogItemApi
                                                     .Include(ci => ci.CatalogBrand)
                                                     .Include(ci => ci.CatalogCategory)
                                                     .FirstAsync(x => x.Id == item.Id);
-         
+
         await services.Publish.Publish(
             new CatalogItemAddedEvent(
-                loadedItem.Name, 
-                loadedItem.Description, 
-                loadedItem.CatalogCategory.Category, 
+                loadedItem.Name,
+                loadedItem.Description,
+                loadedItem.CatalogCategory.Category,
                 loadedItem.CatalogBrand.Brand,
                 loadedItem.Slug,
                 hintUrl));
-         
+
         return TypedResults.Created(hintUrl);
     }
 
@@ -274,7 +272,7 @@ public static class CatalogItemApi
         {
             return TypedResults.BadRequest("File is not selected or is empty.");
         }
-         
+
         using (var ms = new MemoryStream())
         {
             await file.CopyToAsync(ms);

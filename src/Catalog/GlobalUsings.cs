@@ -16,4 +16,5 @@ global using Catalog.Infrastructure.Exceptions;
 global using Catalog.Infrastructure.Extensions;
 global using Catalog.Services;
 global using Catalog.Infrastructure;
-global using Catalog.Apis.Contracts;
+global using Catalog.Endpoints.Contracts;
+global using Catalog.Endpoints;

@@ -1,8 +1,8 @@
-﻿namespace Catalog.Apis;
+﻿namespace Catalog.Endpoints;
 
-public static class CatalogCategoryApi
+public static class CatalogCategoryEndpoints
 {
-    public static IEndpointRouteBuilder MapCatalogCategoryApis(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapCatalogCategoryEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/", CreateCategory);
         app.MapPut("/", UpdateCategory);

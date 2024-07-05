@@ -1,5 +1,5 @@
 ﻿
-namespace Catalog.Apis.Contracts;
+namespace Catalog.Endpoints.Contracts;
 
 public sealed record UpdateCatalogItemMaxStockThresholdRequest(
     int Id,
