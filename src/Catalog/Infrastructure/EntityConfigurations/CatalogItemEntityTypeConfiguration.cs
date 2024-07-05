@@ -6,7 +6,9 @@ public sealed class CatalogItemEntityTypeConfiguration : IEntityTypeConfiguratio
     {
         builder.ToTable(CatalogItem.TableName);
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Slug);
+        builder.Property(x => x.Slug)
+               .HasMaxLength(150);
 
         builder.Property(x => x.Name)
                .IsRequired()
@@ -15,16 +17,10 @@ public sealed class CatalogItemEntityTypeConfiguration : IEntityTypeConfiguratio
         builder.Property(x => x.Description)
                .IsRequired()
                .HasMaxLength(5000);
-
-        builder.Property(x => x.Slug)
-               .IsRequired()
-               .HasMaxLength(150);
-
+         
         builder.Property(x => x.Price)
                .HasColumnType("decimal(15,2)");
-
-        builder.HasIndex(x => x.Slug);
-
+ 
         builder.OwnsMany(x => x.Medias, builder =>
         {
             builder.ToJson();

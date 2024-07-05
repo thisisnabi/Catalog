@@ -5,4 +5,5 @@ public record CatalogItemChangedEvent(
     string Description,
     string CatalogCategory,
     string CatalogBrand,
-    string Slug);
+    string Slug,
+    string DetialUrl);

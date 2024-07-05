@@ -4,9 +4,7 @@ namespace Catalog.Models;
 public class CatalogItem
 {
     public const string TableName = "CatalogItems";
-
-    public int Id { get; private set; }
-
+ 
     public string Name { get; private set; } = null!;
 
     public string Description { get; private set; } = null!;
@@ -38,13 +36,11 @@ public class CatalogItem
         return newItem;
     }
 
-    public void Update(string name, string description, int brandId, int categoryId)
+    public void Update(string description, int brandId, int categoryId)
     {
-        Name = name;
         CatalogBrandId = brandId;
         CatalogCategoryId = categoryId;
         Description = description;
-        Slug = name.ToKebabCase();
     }
     public void SetMaxStockThreshold(int maxStockThreshold)
     {

@@ -1,7 +1,6 @@
 ﻿namespace Catalog.Endpoints.Contracts;
 
 public sealed record CatalogItemResponse(
-    int Id,
     string Name,
     string Slug,
     string Description,
@@ -11,5 +10,4 @@ public sealed record CatalogItemResponse(
     string CategoryName,
     decimal Price,
     int AvailableStock,
-    int MaxStockThreshold
-    );
+    int MaxStockThreshold);

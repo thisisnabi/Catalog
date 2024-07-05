@@ -1,8 +1,7 @@
 ﻿namespace Catalog.Endpoints.Contracts;
 
 public sealed record UpdateCatalogItemRequest(
-    int Id,
-    string Name,
+    string slug,
     string Description,
     int CatalogId,
     int BrandId);
@@ -11,11 +10,6 @@ public sealed class UpdateCatalogItemRequestValidator : AbstractValidator<Update
 {
     public UpdateCatalogItemRequestValidator()
     {
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .NotNull()
-            .MaximumLength(100);
-
         RuleFor(x => x.Description)
             .NotEmpty()
             .NotNull()
@@ -27,7 +21,8 @@ public sealed class UpdateCatalogItemRequestValidator : AbstractValidator<Update
         RuleFor(x => x.BrandId)
             .NotNull();
 
-        RuleFor(x => x.Id)
+        RuleFor(x => x.slug)
+            .MaximumLength(150)
             .NotNull();
     }
 }
