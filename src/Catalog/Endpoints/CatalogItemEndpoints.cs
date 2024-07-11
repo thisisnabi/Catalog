@@ -12,7 +12,6 @@ public static class CatalogItemEndpoints
         app.MapDelete("/{id:required}", DeleteItemById);
         app.MapGet("/{id:required}", GetItemById);
         app.MapGet("/", GetItems);
-        app.MapPost("/{id:required}/media", UploadMedia);
          
         return app;
     }
@@ -227,52 +226,5 @@ public static class CatalogItemEndpoints
                                           ;
 
         return TypedResults.Ok<IEnumerable<CatalogItemResponse>>(items);
-    }
-
-    // This will be removed in the future. Media as a service
-    public static async Task<Results<Ok, BadRequest<string>, NotFound>> UploadMedia(
-        string slug,
-        [AsParameters] CatalogServices services,
-        MediaService mediaService,
-        HttpRequest request)
-    {
-        if (!request.HasFormContentType)
-        {
-            return TypedResults.BadRequest("Expected a form submission.");
-        }
-
-        if (string.IsNullOrEmpty(slug))
-        {
-            return TypedResults.BadRequest("Slug is not valid.");
-        }
-
-        var item = await services.Context.CatalogItems
-                                 .Include(x => x.CatalogBrand)
-                                 .Include(x => x.CatalogCategory)
-                                 .FirstOrDefaultAsync(ci => ci.Slug == slug);
-        if (item is null)
-        {
-            return TypedResults.NotFound();
-        }
-
-
-        var form = await request.ReadFormAsync();
-        var file = form.Files["file"];
-
-        if (file == null || file.Length == 0)
-        {
-            return TypedResults.BadRequest("File is not selected or is empty.");
-        }
-
-        using (var ms = new MemoryStream())
-        {
-            await file.CopyToAsync(ms);
-            ms.Seek(0, SeekOrigin.Begin);
-
-            var url = await mediaService.UploadStream(ms);
-            item.AddMedia(file.FileName, url);
-        }
-
-        return TypedResults.Ok();
     }
 }
