@@ -184,6 +184,7 @@ public static class CatalogItemEndpoints
         var item = await services.Context.CatalogItems
                                          .Include(x => x.CatalogBrand)
                                          .Include(x => x.CatalogCategory)
+                                         .Include(x => x.Medias)
                                          .FirstOrDefaultAsync(ci => ci.Slug == slug);
         if (item is null)
         {
@@ -201,7 +202,7 @@ public static class CatalogItemEndpoints
                 item.CatalogCategory.Category,
                 item.Price,
                 item.AvailableStock,
-                item.MaxStockThreshold));
+                item.MaxStockThreshold, [.. item.Medias]));
     }
 
     public static async Task<Results<Ok<IEnumerable<CatalogItemResponse>>, BadRequest<string>>> GetItems(
@@ -222,7 +223,7 @@ public static class CatalogItemEndpoints
                                                                                x.CatalogCategory.Category,
                                                                                x.Price,
                                                                                x.AvailableStock,
-                                                                               x.MaxStockThreshold))
+                                                                               x.MaxStockThreshold, [.. x.Medias]))
                                           ;
 
         return TypedResults.Ok<IEnumerable<CatalogItemResponse>>(items);

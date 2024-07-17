@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MassTransit.Configuration;
 using Microsoft.AspNetCore.Identity;
 
 namespace Catalog.Infrastructure.Extensions;
@@ -21,6 +22,7 @@ public static class ApplicationExtensions
                 throw new ArgumentNullException(nameof(BrokerOptions));
             }
 
+            configure.AddConsumers(Assembly.GetExecutingAssembly());
             configure.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(brokerConfig.Host, hostConfigure =>

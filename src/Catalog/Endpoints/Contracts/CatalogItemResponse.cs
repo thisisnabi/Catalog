@@ -10,4 +10,5 @@ public sealed record CatalogItemResponse(
     string CategoryName,
     decimal Price,
     int AvailableStock,
-    int MaxStockThreshold);
+    int MaxStockThreshold,
+    IReadOnlyCollection<CatalogMedia> medias);
