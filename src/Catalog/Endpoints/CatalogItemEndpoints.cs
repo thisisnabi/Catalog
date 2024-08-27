@@ -9,10 +9,10 @@ public static class CatalogItemEndpoints
         app.MapPost("/", CreateItem);
         app.MapPut("/", UpdateItem);
         app.MapPatch("/max_stock_threshold", UpdateMaxStockThreshold);
-        app.MapDelete("/{id:required}", DeleteItemById);
-        app.MapGet("/{id:required}", GetItemById);
+        app.MapDelete("/{slug:required}", DeleteItemById);
+        app.MapGet("/{slug:required}", GetItemById);
         app.MapGet("/", GetItems);
-         
+
         return app;
     }
 
@@ -153,8 +153,10 @@ public static class CatalogItemEndpoints
         return TypedResults.Created($"/catalog/api/v1/items/{Item.Slug}");
     }
 
-    public static async Task<Results<NoContent, NotFound, BadRequest<string>>> DeleteItemById
-        ([AsParameters] CatalogServices services, string slug, CancellationToken cancellationToken)
+    public static async Task<Results<NoContent, NotFound, BadRequest<string>>> DeleteItemById(
+    [AsParameters] CatalogServices services,
+    string slug,
+    CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(slug))
         {
